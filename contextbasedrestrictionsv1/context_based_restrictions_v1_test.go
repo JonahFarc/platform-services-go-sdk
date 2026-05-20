@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2025.
+ * (C) Copyright IBM Corp. 2026.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package contextbasedrestrictionsv1_test
 import (
 	"bytes"
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -4305,6 +4304,13 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
+			It(`Invoke NewAddressDedicatedInstance successfully`, func() {
+				typeVar := "dedicatedInstance"
+				value := "testString"
+				_model, err := contextBasedRestrictionsService.NewAddressDedicatedInstance(typeVar, value)
+				Expect(_model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
 			It(`Invoke NewAddressIPAddress successfully`, func() {
 				typeVar := "ipAddress"
 				value := "testString"
@@ -4516,6 +4522,26 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			Expect(result).ToNot(BeNil())
 			Expect(result).To(Equal(model))
 		})
+		It(`Invoke UnmarshalAddressDedicatedInstance successfully`, func() {
+			// Construct an instance of the model.
+			model := new(contextbasedrestrictionsv1.AddressDedicatedInstance)
+			model.Type = core.StringPtr("dedicatedInstance")
+			model.Value = core.StringPtr("testString")
+			model.ID = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *contextbasedrestrictionsv1.AddressDedicatedInstance
+			err = contextbasedrestrictionsv1.UnmarshalAddressDedicatedInstance(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
 		It(`Invoke UnmarshalAddressIPAddress successfully`, func() {
 			// Construct an instance of the model.
 			model := new(contextbasedrestrictionsv1.AddressIPAddress)
@@ -4617,9 +4643,10 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			Expect(result).To(Equal(model))
 		})
 	})
+
 	Describe(`Utility function tests`, func() {
 		It(`Invoke CreateMockByteArray() successfully`, func() {
-			mockByteArray := CreateMockByteArray("VGhpcyBpcyBhIHRlc3Qgb2YgdGhlIGVtZXJnZW5jeSBicm9hZGNhc3Qgc3lzdGVt")
+			mockByteArray := CreateMockByteArray("This is a test")
 			Expect(mockByteArray).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockUUID() successfully`, func() {
@@ -4645,11 +4672,8 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 // Utility functions used by the generated test code
 //
 
-func CreateMockByteArray(encodedString string) *[]byte {
-	ba, err := base64.StdEncoding.DecodeString(encodedString)
-	if err != nil {
-		panic(err)
-	}
+func CreateMockByteArray(mockData string) *[]byte {
+	ba := []byte(mockData)
 	return &ba
 }
 

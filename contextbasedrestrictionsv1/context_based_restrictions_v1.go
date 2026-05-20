@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2025.
+ * (C) Copyright IBM Corp. 2026.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.108.0-56772134-20251111-102802
+ * IBM OpenAPI SDK Code Generator Version: 3.86.0-bc6f14b3-20240221-193958
  */
 
 // Package contextbasedrestrictionsv1 : Operations and models for the ContextBasedRestrictionsV1 service
@@ -66,26 +66,22 @@ func NewContextBasedRestrictionsV1UsingExternalConfig(options *ContextBasedRestr
 	if options.Authenticator == nil {
 		options.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "env-auth-error", common.GetComponentInfo())
 			return
 		}
 	}
 
 	contextBasedRestrictions, err = NewContextBasedRestrictionsV1(options)
-	err = core.RepurposeSDKProblem(err, "new-client-error")
 	if err != nil {
 		return
 	}
 
 	err = contextBasedRestrictions.Service.ConfigureService(options.ServiceName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "client-config-error", common.GetComponentInfo())
 		return
 	}
 
 	if options.URL != "" {
 		err = contextBasedRestrictions.Service.SetServiceURL(options.URL)
-		err = core.RepurposeSDKProblem(err, "url-set-error")
 	}
 	return
 }
@@ -99,14 +95,12 @@ func NewContextBasedRestrictionsV1(options *ContextBasedRestrictionsV1Options) (
 
 	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "new-base-error", common.GetComponentInfo())
 		return
 	}
 
 	if options.URL != "" {
 		err = baseService.SetServiceURL(options.URL)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "set-url-error", common.GetComponentInfo())
 			return
 		}
 	}
@@ -120,7 +114,7 @@ func NewContextBasedRestrictionsV1(options *ContextBasedRestrictionsV1Options) (
 
 // GetServiceURLForRegion returns the service URL to be used for the specified region
 func GetServiceURLForRegion(region string) (string, error) {
-	return "", core.SDKErrorf(nil, "service does not support regional URLs", "no-regional-support", common.GetComponentInfo())
+	return "", fmt.Errorf("service does not support regional URLs")
 }
 
 // Clone makes a copy of "contextBasedRestrictions" suitable for processing requests.
@@ -135,11 +129,7 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) Clone() *ContextBase
 
 // SetServiceURL sets the service URL
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) SetServiceURL(url string) error {
-	err := contextBasedRestrictions.Service.SetServiceURL(url)
-	if err != nil {
-		err = core.SDKErrorf(err, "", "url-set-error", common.GetComponentInfo())
-	}
-	return err
+	return contextBasedRestrictions.Service.SetServiceURL(url)
 }
 
 // GetServiceURL returns the service URL
@@ -176,16 +166,13 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DisableRetries() {
 // CreateZone : Create a network zone
 // This operation creates a network zone for the specified account.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateZone(createZoneOptions *CreateZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.CreateZoneWithContext(context.Background(), createZoneOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.CreateZoneWithContext(context.Background(), createZoneOptions)
 }
 
 // CreateZoneWithContext is an alternate form of the CreateZone method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateZoneWithContext(ctx context.Context, createZoneOptions *CreateZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(createZoneOptions, "createZoneOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -194,16 +181,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateZoneWithContex
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range createZoneOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "CreateZone")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range createZoneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -233,27 +219,22 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateZoneWithContex
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "set-json-body-error", common.GetComponentInfo())
 		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "create_zone", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalZone)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -265,21 +246,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateZoneWithContex
 // ListZones : List network zones
 // This operation lists network zones in the specified account.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListZones(listZonesOptions *ListZonesOptions) (result *ZoneList, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ListZonesWithContext(context.Background(), listZonesOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ListZonesWithContext(context.Background(), listZonesOptions)
 }
 
 // ListZonesWithContext is an alternate form of the ListZones method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListZonesWithContext(ctx context.Context, listZonesOptions *ListZonesOptions) (result *ZoneList, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listZonesOptions, "listZonesOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(listZonesOptions, "listZonesOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -288,16 +265,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListZonesWithContext
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range listZonesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ListZones")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range listZonesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -318,21 +294,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListZonesWithContext
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "list_zones", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalZoneList)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -344,21 +316,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListZonesWithContext
 // GetZone : Get a network zone
 // This operation retrieves the network zone identified by the specified zone ID.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetZone(getZoneOptions *GetZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.GetZoneWithContext(context.Background(), getZoneOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.GetZoneWithContext(context.Background(), getZoneOptions)
 }
 
 // GetZoneWithContext is an alternate form of the GetZone method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetZoneWithContext(ctx context.Context, getZoneOptions *GetZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getZoneOptions, "getZoneOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(getZoneOptions, "getZoneOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -371,16 +339,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetZoneWithContext(c
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones/{zone_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range getZoneOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "GetZone")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range getZoneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -393,21 +360,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetZoneWithContext(c
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "get_zone", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalZone)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -420,21 +383,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetZoneWithContext(c
 // This operation replaces the network zone identified by the specified zone ID. Partial updates are not supported. The
 // entire network zone object must be replaced.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceZone(replaceZoneOptions *ReplaceZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ReplaceZoneWithContext(context.Background(), replaceZoneOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ReplaceZoneWithContext(context.Background(), replaceZoneOptions)
 }
 
 // ReplaceZoneWithContext is an alternate form of the ReplaceZone method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceZoneWithContext(ctx context.Context, replaceZoneOptions *ReplaceZoneOptions) (result *Zone, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(replaceZoneOptions, "replaceZoneOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(replaceZoneOptions, "replaceZoneOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -447,16 +406,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceZoneWithConte
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones/{zone_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range replaceZoneOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ReplaceZone")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range replaceZoneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -489,27 +447,22 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceZoneWithConte
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "set-json-body-error", common.GetComponentInfo())
 		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "replace_zone", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalZone)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -521,21 +474,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceZoneWithConte
 // DeleteZone : Delete a network zone
 // This operation deletes the network zone identified by the specified zone ID.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteZone(deleteZoneOptions *DeleteZoneOptions) (response *core.DetailedResponse, err error) {
-	response, err = contextBasedRestrictions.DeleteZoneWithContext(context.Background(), deleteZoneOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.DeleteZoneWithContext(context.Background(), deleteZoneOptions)
 }
 
 // DeleteZoneWithContext is an alternate form of the DeleteZone method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteZoneWithContext(ctx context.Context, deleteZoneOptions *DeleteZoneOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteZoneOptions, "deleteZoneOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(deleteZoneOptions, "deleteZoneOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -548,16 +497,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteZoneWithContex
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones/{zone_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range deleteZoneOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "DeleteZone")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range deleteZoneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	if deleteZoneOptions.XCorrelationID != nil {
@@ -569,16 +517,10 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteZoneWithContex
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	response, err = contextBasedRestrictions.Service.Request(request, nil)
-	if err != nil {
-		core.EnrichHTTPProblem(err, "delete_zone", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
-		return
-	}
 
 	return
 }
@@ -586,16 +528,13 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteZoneWithContex
 // ListAvailableServicerefTargets : List available service reference targets
 // This operation lists all available service reference targets.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableServicerefTargets(listAvailableServicerefTargetsOptions *ListAvailableServicerefTargetsOptions) (result *ServiceRefTargetList, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ListAvailableServicerefTargetsWithContext(context.Background(), listAvailableServicerefTargetsOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ListAvailableServicerefTargetsWithContext(context.Background(), listAvailableServicerefTargetsOptions)
 }
 
 // ListAvailableServicerefTargetsWithContext is an alternate form of the ListAvailableServicerefTargets method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableServicerefTargetsWithContext(ctx context.Context, listAvailableServicerefTargetsOptions *ListAvailableServicerefTargetsOptions) (result *ServiceRefTargetList, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listAvailableServicerefTargetsOptions, "listAvailableServicerefTargetsOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -604,16 +543,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableService
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones/serviceref_targets`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range listAvailableServicerefTargetsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ListAvailableServicerefTargets")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range listAvailableServicerefTargetsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -630,21 +568,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableService
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "list_available_serviceref_targets", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalServiceRefTargetList)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -656,21 +590,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableService
 // GetServicerefTarget : Get service reference target for a specified service name
 // This operation gets the service reference target for a specified service name.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetServicerefTarget(getServicerefTargetOptions *GetServicerefTargetOptions) (result *ServiceRefTarget, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.GetServicerefTargetWithContext(context.Background(), getServicerefTargetOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.GetServicerefTargetWithContext(context.Background(), getServicerefTargetOptions)
 }
 
 // GetServicerefTargetWithContext is an alternate form of the GetServicerefTarget method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetServicerefTargetWithContext(ctx context.Context, getServicerefTargetOptions *GetServicerefTargetOptions) (result *ServiceRefTarget, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getServicerefTargetOptions, "getServicerefTargetOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(getServicerefTargetOptions, "getServicerefTargetOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -683,16 +613,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetServicerefTargetW
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/zones/serviceref_targets/{service_name}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range getServicerefTargetOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "GetServicerefTarget")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range getServicerefTargetOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -705,21 +634,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetServicerefTargetW
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "get_serviceref_target", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalServiceRefTarget)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -731,16 +656,13 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetServicerefTargetW
 // CreateRule : Create a rule
 // This operation creates a rule for the specified account.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateRule(createRuleOptions *CreateRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.CreateRuleWithContext(context.Background(), createRuleOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.CreateRuleWithContext(context.Background(), createRuleOptions)
 }
 
 // CreateRuleWithContext is an alternate form of the CreateRule method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateRuleWithContext(ctx context.Context, createRuleOptions *CreateRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(createRuleOptions, "createRuleOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -749,16 +671,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateRuleWithContex
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/rules`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range createRuleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "CreateRule")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range createRuleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -788,27 +709,22 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateRuleWithContex
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "set-json-body-error", common.GetComponentInfo())
 		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "create_rule", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRule)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -820,21 +736,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) CreateRuleWithContex
 // ListRules : List rules
 // This operation lists rules in the specified account.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListRules(listRulesOptions *ListRulesOptions) (result *RuleList, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ListRulesWithContext(context.Background(), listRulesOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ListRulesWithContext(context.Background(), listRulesOptions)
 }
 
 // ListRulesWithContext is an alternate form of the ListRules method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListRulesWithContext(ctx context.Context, listRulesOptions *ListRulesOptions) (result *RuleList, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listRulesOptions, "listRulesOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(listRulesOptions, "listRulesOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -843,16 +755,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListRulesWithContext
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/rules`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range listRulesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ListRules")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range listRulesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -897,21 +808,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListRulesWithContext
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "list_rules", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRuleList)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -923,21 +830,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListRulesWithContext
 // GetRule : Get a rule
 // This operation retrieves the rule identified by the specified rule ID.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetRule(getRuleOptions *GetRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.GetRuleWithContext(context.Background(), getRuleOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.GetRuleWithContext(context.Background(), getRuleOptions)
 }
 
 // GetRuleWithContext is an alternate form of the GetRule method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetRuleWithContext(ctx context.Context, getRuleOptions *GetRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getRuleOptions, "getRuleOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(getRuleOptions, "getRuleOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -950,16 +853,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetRuleWithContext(c
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/rules/{rule_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range getRuleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "GetRule")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range getRuleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -972,21 +874,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetRuleWithContext(c
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "get_rule", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRule)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -999,21 +897,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetRuleWithContext(c
 // This operation replaces the rule identified by the specified rule ID. Partial updates are not supported. The entire
 // rule object must be replaced.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceRule(replaceRuleOptions *ReplaceRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ReplaceRuleWithContext(context.Background(), replaceRuleOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ReplaceRuleWithContext(context.Background(), replaceRuleOptions)
 }
 
 // ReplaceRuleWithContext is an alternate form of the ReplaceRule method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceRuleWithContext(ctx context.Context, replaceRuleOptions *ReplaceRuleOptions) (result *Rule, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(replaceRuleOptions, "replaceRuleOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(replaceRuleOptions, "replaceRuleOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -1026,16 +920,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceRuleWithConte
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/rules/{rule_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range replaceRuleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ReplaceRule")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range replaceRuleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -1068,27 +961,22 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceRuleWithConte
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "set-json-body-error", common.GetComponentInfo())
 		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "replace_rule", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRule)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -1100,21 +988,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ReplaceRuleWithConte
 // DeleteRule : Delete a rule
 // This operation deletes the rule identified by the specified rule ID.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteRule(deleteRuleOptions *DeleteRuleOptions) (response *core.DetailedResponse, err error) {
-	response, err = contextBasedRestrictions.DeleteRuleWithContext(context.Background(), deleteRuleOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.DeleteRuleWithContext(context.Background(), deleteRuleOptions)
 }
 
 // DeleteRuleWithContext is an alternate form of the DeleteRule method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteRuleWithContext(ctx context.Context, deleteRuleOptions *DeleteRuleOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteRuleOptions, "deleteRuleOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(deleteRuleOptions, "deleteRuleOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -1127,16 +1011,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteRuleWithContex
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/rules/{rule_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range deleteRuleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "DeleteRule")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range deleteRuleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	if deleteRuleOptions.XCorrelationID != nil {
@@ -1148,16 +1031,10 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteRuleWithContex
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	response, err = contextBasedRestrictions.Service.Request(request, nil)
-	if err != nil {
-		core.EnrichHTTPProblem(err, "delete_rule", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
-		return
-	}
 
 	return
 }
@@ -1165,21 +1042,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) DeleteRuleWithContex
 // GetAccountSettings : Get account settings
 // This operation retrieves the settings for the specified account ID.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetAccountSettings(getAccountSettingsOptions *GetAccountSettingsOptions) (result *AccountSettings, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.GetAccountSettingsWithContext(context.Background(), getAccountSettingsOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.GetAccountSettingsWithContext(context.Background(), getAccountSettingsOptions)
 }
 
 // GetAccountSettingsWithContext is an alternate form of the GetAccountSettings method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetAccountSettingsWithContext(ctx context.Context, getAccountSettingsOptions *GetAccountSettingsOptions) (result *AccountSettings, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getAccountSettingsOptions, "getAccountSettingsOptions cannot be nil")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "unexpected-nil-param", common.GetComponentInfo())
 		return
 	}
 	err = core.ValidateStruct(getAccountSettingsOptions, "getAccountSettingsOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -1192,16 +1065,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetAccountSettingsWi
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/account_settings/{account_id}`, pathParamsMap)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range getAccountSettingsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "GetAccountSettings")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range getAccountSettingsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -1214,21 +1086,17 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetAccountSettingsWi
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "get_account_settings", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAccountSettings)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
@@ -1240,16 +1108,13 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) GetAccountSettingsWi
 // ListAvailableServiceOperations : List available service operations
 // This operation lists all available service operations.
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableServiceOperations(listAvailableServiceOperationsOptions *ListAvailableServiceOperationsOptions) (result *OperationsList, response *core.DetailedResponse, err error) {
-	result, response, err = contextBasedRestrictions.ListAvailableServiceOperationsWithContext(context.Background(), listAvailableServiceOperationsOptions)
-	err = core.RepurposeSDKProblem(err, "")
-	return
+	return contextBasedRestrictions.ListAvailableServiceOperationsWithContext(context.Background(), listAvailableServiceOperationsOptions)
 }
 
 // ListAvailableServiceOperationsWithContext is an alternate form of the ListAvailableServiceOperations method which supports a Context parameter
 func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableServiceOperationsWithContext(ctx context.Context, listAvailableServiceOperationsOptions *ListAvailableServiceOperationsOptions) (result *OperationsList, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listAvailableServiceOperationsOptions, "listAvailableServiceOperationsOptions")
 	if err != nil {
-		err = core.SDKErrorf(err, "", "struct-validation-error", common.GetComponentInfo())
 		return
 	}
 
@@ -1258,16 +1123,15 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableService
 	builder.EnableGzipCompression = contextBasedRestrictions.GetEnableGzipCompression()
 	_, err = builder.ResolveRequestURL(contextBasedRestrictions.Service.Options.URL, `/v1/operations`, nil)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "url-resolve-error", common.GetComponentInfo())
 		return
+	}
+
+	for headerName, headerValue := range listAvailableServiceOperationsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	sdkHeaders := common.GetSdkHeaders("context_based_restrictions", "V1", "ListAvailableServiceOperations")
 	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	for headerName, headerValue := range listAvailableServiceOperationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
@@ -1290,30 +1154,23 @@ func (contextBasedRestrictions *ContextBasedRestrictionsV1) ListAvailableService
 
 	request, err := builder.Build()
 	if err != nil {
-		err = core.SDKErrorf(err, "", "build-error", common.GetComponentInfo())
 		return
 	}
 
 	var rawResponse map[string]json.RawMessage
 	response, err = contextBasedRestrictions.Service.Request(request, &rawResponse)
 	if err != nil {
-		core.EnrichHTTPProblem(err, "list_available_service_operations", getServiceComponentInfo())
-		err = core.SDKErrorf(err, "", "http-request-err", common.GetComponentInfo())
 		return
 	}
 	if rawResponse != nil {
 		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalOperationsList)
 		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-resp-error", common.GetComponentInfo())
 			return
 		}
 		response.Result = result
 	}
 
 	return
-}
-func getServiceComponentInfo() *core.ProblemComponent {
-	return core.NewProblemComponent(DefaultServiceName, "1.0.1")
 }
 
 // APIType : Service API Type details.
@@ -1342,32 +1199,26 @@ func UnmarshalAPIType(m map[string]json.RawMessage, result interface{}) (err err
 	obj := new(APIType)
 	err = core.UnmarshalPrimitive(m, "api_type_id", &obj.APITypeID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "api_type_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "display_name", &obj.DisplayName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "display_name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "description-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "actions", &obj.Actions, UnmarshalAction)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "actions-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "enforcement_modes", &obj.EnforcementModes)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "enforcement_modes-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -1421,67 +1272,54 @@ func UnmarshalAccountSettings(m map[string]json.RawMessage, result interface{}) 
 	obj := new(AccountSettings)
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "crn", &obj.CRN)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "crn-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "rule_count_limit", &obj.RuleCountLimit)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "rule_count_limit-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "zone_count_limit", &obj.ZoneCountLimit)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "zone_count_limit-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "tags_rule_count_limit", &obj.TagsRuleCountLimit)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "tags_rule_count_limit-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "current_rule_count", &obj.CurrentRuleCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "current_rule_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "current_zone_count", &obj.CurrentZoneCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "current_zone_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "current_tags_rule_count", &obj.CurrentTagsRuleCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "current_tags_rule_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "href", &obj.Href)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "href-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_at", &obj.CreatedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_by_id", &obj.CreatedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_by_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_at", &obj.LastModifiedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_by_id", &obj.LastModifiedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_by_id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -1502,12 +1340,10 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 	obj := new(Action)
 	err = core.UnmarshalPrimitive(m, "action_id", &obj.ActionID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "action_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "description-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -1521,6 +1357,7 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 // - AddressSubnet
 // - AddressVPC
 // - AddressServiceRef
+// - AddressDedicatedInstance
 type Address struct {
 	// The type of address.
 	Type *string `json:"type,omitempty"`
@@ -1538,11 +1375,12 @@ type Address struct {
 // Constants associated with the Address.Type property.
 // The type of address.
 const (
-	AddressTypeIpaddressConst  = "ipAddress"
-	AddressTypeIprangeConst    = "ipRange"
-	AddressTypeServicerefConst = "serviceRef"
-	AddressTypeSubnetConst     = "subnet"
-	AddressTypeVPCConst        = "vpc"
+	AddressTypeDedicatedinstanceConst = "dedicatedInstance"
+	AddressTypeIpaddressConst         = "ipAddress"
+	AddressTypeIprangeConst           = "ipRange"
+	AddressTypeServicerefConst        = "serviceRef"
+	AddressTypeSubnetConst            = "subnet"
+	AddressTypeVPCConst               = "vpc"
 )
 
 func (*Address) isaAddress() bool {
@@ -1559,42 +1397,27 @@ func UnmarshalAddress(m map[string]json.RawMessage, result interface{}) (err err
 	var discValue string
 	err = core.UnmarshalPrimitive(m, "type", &discValue)
 	if err != nil {
-		errMsg := fmt.Sprintf("error unmarshalling discriminator property 'type': %s", err.Error())
-		err = core.SDKErrorf(err, errMsg, "discriminator-unmarshal-error", common.GetComponentInfo())
+		err = fmt.Errorf("error unmarshalling discriminator property 'type': %s", err.Error())
 		return
 	}
 	if discValue == "" {
-		err = core.SDKErrorf(err, "required discriminator property 'type' not found in JSON object", "missing-discriminator", common.GetComponentInfo())
+		err = fmt.Errorf("required discriminator property 'type' not found in JSON object")
 		return
 	}
 	if discValue == "ipAddress" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressIPAddress)
-		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-AddressIPAddress-error", common.GetComponentInfo())
-		}
 	} else if discValue == "ipRange" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressIPAddressRange)
-		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-AddressIPAddressRange-error", common.GetComponentInfo())
-		}
 	} else if discValue == "subnet" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressSubnet)
-		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-AddressSubnet-error", common.GetComponentInfo())
-		}
 	} else if discValue == "vpc" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressVPC)
-		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-AddressVPC-error", common.GetComponentInfo())
-		}
 	} else if discValue == "serviceRef" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressServiceRef)
-		if err != nil {
-			err = core.SDKErrorf(err, "", "unmarshal-AddressServiceRef-error", common.GetComponentInfo())
-		}
+	} else if discValue == "dedicatedInstance" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalAddressDedicatedInstance)
 	} else {
-		errMsg := fmt.Sprintf("unrecognized value for discriminator property 'type': %s", discValue)
-		err = core.SDKErrorf(err, errMsg, "invalid-discriminator", common.GetComponentInfo())
+		err = fmt.Errorf("unrecognized value for discriminator property 'type': %s", discValue)
 	}
 	return
 }
@@ -1614,6 +1437,7 @@ type CreateRuleOptions struct {
 	Operations *NewRuleOperations `json:"operations,omitempty"`
 
 	// The rule enforcement mode:
+	//
 	//  * `enabled` - The restrictions are enforced and reported. This is the default.
 	//  * `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 	//  * `report` - The restrictions are evaluated and reported, but not enforced.
@@ -1630,12 +1454,13 @@ type CreateRuleOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the CreateRuleOptions.EnforcementMode property.
 // The rule enforcement mode:
+//
 //   - `enabled` - The restrictions are enforced and reported. This is the default.
 //   - `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 //   - `report` - The restrictions are evaluated and reported, but not enforced.
@@ -1728,7 +1553,7 @@ type CreateZoneOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -1802,7 +1627,7 @@ type DeleteRuleOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -1854,7 +1679,7 @@ type DeleteZoneOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -1906,7 +1731,7 @@ type GetAccountSettingsOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -1958,7 +1783,7 @@ type GetRuleOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2010,7 +1835,7 @@ type GetServicerefTargetOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2062,7 +1887,7 @@ type GetZoneOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2120,7 +1945,7 @@ type ListAvailableServiceOperationsOptions struct {
 	// The type of resource.
 	ResourceType *string `json:"resource_type,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2182,7 +2007,7 @@ type ListAvailableServicerefTargetsOptions struct {
 	// Specifies the types of services to retrieve.
 	Type *string `json:"type,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2270,7 +2095,7 @@ type ListRulesOptions struct {
 	// The rule's `enforcement_mode` attribute.
 	EnforcementMode *string `json:"enforcement_mode,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2397,7 +2222,7 @@ type ListZonesOptions struct {
 	// [Sorting](https://cloud.ibm.com/docs/api-handbook?topic=api-handbook-sorting).
 	Sort *string `json:"sort,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2457,9 +2282,6 @@ func (*ContextBasedRestrictionsV1) NewNewRuleOperations(apiTypes []NewRuleOperat
 		APITypes: apiTypes,
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -2468,7 +2290,6 @@ func UnmarshalNewRuleOperations(m map[string]json.RawMessage, result interface{}
 	obj := new(NewRuleOperations)
 	err = core.UnmarshalModel(m, "api_types", &obj.APITypes, UnmarshalNewRuleOperationsAPITypesItem)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "api_types-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2486,9 +2307,6 @@ func (*ContextBasedRestrictionsV1) NewNewRuleOperationsAPITypesItem(apiTypeID st
 		APITypeID: core.StringPtr(apiTypeID),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -2497,7 +2315,6 @@ func UnmarshalNewRuleOperationsAPITypesItem(m map[string]json.RawMessage, result
 	obj := new(NewRuleOperationsAPITypesItem)
 	err = core.UnmarshalPrimitive(m, "api_type_id", &obj.APITypeID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "api_type_id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2515,7 +2332,6 @@ func UnmarshalOperationsList(m map[string]json.RawMessage, result interface{}) (
 	obj := new(OperationsList)
 	err = core.UnmarshalModel(m, "api_types", &obj.APITypes, UnmarshalAPIType)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "api_types-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2544,6 +2360,7 @@ type ReplaceRuleOptions struct {
 	Operations *NewRuleOperations `json:"operations,omitempty"`
 
 	// The rule enforcement mode:
+	//
 	//  * `enabled` - The restrictions are enforced and reported. This is the default.
 	//  * `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 	//  * `report` - The restrictions are evaluated and reported, but not enforced.
@@ -2560,12 +2377,13 @@ type ReplaceRuleOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the ReplaceRuleOptions.EnforcementMode property.
 // The rule enforcement mode:
+//
 //   - `enabled` - The restrictions are enforced and reported. This is the default.
 //   - `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 //   - `report` - The restrictions are evaluated and reported, but not enforced.
@@ -2680,7 +2498,7 @@ type ReplaceZoneOptions struct {
 	// Deprecated: this field is deprecated and may be removed in a future release.
 	TransactionID *string `json:"Transaction-Id,omitempty"`
 
-	// Allows users to set headers on API requests.
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -2768,9 +2586,6 @@ func (*ContextBasedRestrictionsV1) NewResource(attributes []ResourceAttribute) (
 		Attributes: attributes,
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -2779,12 +2594,10 @@ func UnmarshalResource(m map[string]json.RawMessage, result interface{}) (err er
 	obj := new(Resource)
 	err = core.UnmarshalModel(m, "attributes", &obj.Attributes, UnmarshalResourceAttribute)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "attributes-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "tags", &obj.Tags, UnmarshalResourceTagAttribute)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "tags-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2810,9 +2623,6 @@ func (*ContextBasedRestrictionsV1) NewResourceAttribute(name string, value strin
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -2821,17 +2631,14 @@ func UnmarshalResourceAttribute(m map[string]json.RawMessage, result interface{}
 	obj := new(ResourceAttribute)
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "operator", &obj.Operator)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "operator-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2857,9 +2664,6 @@ func (*ContextBasedRestrictionsV1) NewResourceTagAttribute(name string, value st
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -2868,17 +2672,14 @@ func UnmarshalResourceTagAttribute(m map[string]json.RawMessage, result interfac
 	obj := new(ResourceTagAttribute)
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "operator", &obj.Operator)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "operator-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -2906,6 +2707,7 @@ type Rule struct {
 	Operations *NewRuleOperations `json:"operations,omitempty"`
 
 	// The rule enforcement mode:
+	//
 	//  * `enabled` - The restrictions are enforced and reported. This is the default.
 	//  * `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 	//  * `report` - The restrictions are evaluated and reported, but not enforced.
@@ -2929,6 +2731,7 @@ type Rule struct {
 
 // Constants associated with the Rule.EnforcementMode property.
 // The rule enforcement mode:
+//
 //   - `enabled` - The restrictions are enforced and reported. This is the default.
 //   - `disabled` - The restrictions are disabled. Nothing is enforced or reported.
 //   - `report` - The restrictions are evaluated and reported, but not enforced.
@@ -2943,62 +2746,50 @@ func UnmarshalRule(m map[string]json.RawMessage, result interface{}) (err error)
 	obj := new(Rule)
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "crn", &obj.CRN)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "crn-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "description-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "contexts", &obj.Contexts, UnmarshalRuleContext)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "contexts-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "resources", &obj.Resources, UnmarshalResource)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "resources-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "operations", &obj.Operations, UnmarshalNewRuleOperations)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "operations-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "enforcement_mode", &obj.EnforcementMode)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "enforcement_mode-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "href", &obj.Href)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "href-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_at", &obj.CreatedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_by_id", &obj.CreatedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_by_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_at", &obj.LastModifiedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_by_id", &obj.LastModifiedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_by_id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3017,9 +2808,6 @@ func (*ContextBasedRestrictionsV1) NewRuleContext(attributes []RuleContextAttrib
 		Attributes: attributes,
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3028,7 +2816,6 @@ func UnmarshalRuleContext(m map[string]json.RawMessage, result interface{}) (err
 	obj := new(RuleContext)
 	err = core.UnmarshalModel(m, "attributes", &obj.Attributes, UnmarshalRuleContextAttribute)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "attributes-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3051,9 +2838,6 @@ func (*ContextBasedRestrictionsV1) NewRuleContextAttribute(name string, value st
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3062,12 +2846,10 @@ func UnmarshalRuleContextAttribute(m map[string]json.RawMessage, result interfac
 	obj := new(RuleContextAttribute)
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3088,12 +2870,10 @@ func UnmarshalRuleList(m map[string]json.RawMessage, result interface{}) (err er
 	obj := new(RuleList)
 	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "rules", &obj.Rules, UnmarshalRule)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "rules-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3120,22 +2900,18 @@ func UnmarshalServiceRefTarget(m map[string]json.RawMessage, result interface{})
 	obj := new(ServiceRefTarget)
 	err = core.UnmarshalPrimitive(m, "service_name", &obj.ServiceName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "service_name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "service_type", &obj.ServiceType)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "service_type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "locations", &obj.Locations, UnmarshalServiceRefTargetLocationsItem)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "locations-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "display_name", &obj.DisplayName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "display_name-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3156,12 +2932,10 @@ func UnmarshalServiceRefTargetList(m map[string]json.RawMessage, result interfac
 	obj := new(ServiceRefTargetList)
 	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalServiceRefTarget)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "targets-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3185,17 +2959,14 @@ func UnmarshalServiceRefTargetLocationsItem(m map[string]json.RawMessage, result
 	obj := new(ServiceRefTargetLocationsItem)
 	err = core.UnmarshalPrimitive(m, "display_name", &obj.DisplayName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "display_name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "kind", &obj.Kind)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "kind-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3226,9 +2997,6 @@ func (*ContextBasedRestrictionsV1) NewServiceRefValue(accountID string) (_model 
 		AccountID: core.StringPtr(accountID),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3237,27 +3005,22 @@ func UnmarshalServiceRefValue(m map[string]json.RawMessage, result interface{}) 
 	obj := new(ServiceRefValue)
 	err = core.UnmarshalPrimitive(m, "account_id", &obj.AccountID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "account_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "service_type", &obj.ServiceType)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "service_type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "service_name", &obj.ServiceName)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "service_name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "service_instance", &obj.ServiceInstance)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "service_instance-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "location", &obj.Location)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "location-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3315,72 +3078,58 @@ func UnmarshalZone(m map[string]json.RawMessage, result interface{}) (err error)
 	obj := new(Zone)
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "crn", &obj.CRN)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "crn-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "address_count", &obj.AddressCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "address_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "excluded_count", &obj.ExcludedCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "excluded_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "account_id", &obj.AccountID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "account_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "description-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "addresses", &obj.Addresses, UnmarshalAddress)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "addresses-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "excluded", &obj.Excluded, UnmarshalAddress)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "excluded-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "href", &obj.Href)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "href-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_at", &obj.CreatedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_by_id", &obj.CreatedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_by_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_at", &obj.LastModifiedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_by_id", &obj.LastModifiedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_by_id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3401,12 +3150,10 @@ func UnmarshalZoneList(m map[string]json.RawMessage, result interface{}) (err er
 	obj := new(ZoneList)
 	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "zones", &obj.Zones, UnmarshalZoneSummary)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "zones-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3457,62 +3204,102 @@ func UnmarshalZoneSummary(m map[string]json.RawMessage, result interface{}) (err
 	obj := new(ZoneSummary)
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "crn", &obj.CRN)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "crn-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "name-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "description-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "addresses_preview", &obj.AddressesPreview, UnmarshalAddress)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "addresses_preview-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "address_count", &obj.AddressCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "address_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "excluded_count", &obj.ExcludedCount)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "excluded_count-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "href", &obj.Href)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "href-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_at", &obj.CreatedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created_by_id", &obj.CreatedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "created_by_id-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_at", &obj.LastModifiedAt)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_at-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "last_modified_by_id", &obj.LastModifiedByID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "last_modified_by_id-error", common.GetComponentInfo())
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// AddressDedicatedInstance : A single Dedicated Instance address.
+// This model "extends" Address
+type AddressDedicatedInstance struct {
+	// The type of address.
+	Type *string `json:"type" validate:"required"`
+
+	// The dedicated instance CRN.
+	Value *string `json:"value" validate:"required"`
+
+	// The address id (for use by terraform only).
+	ID *string `json:"id,omitempty"`
+}
+
+// Constants associated with the AddressDedicatedInstance.Type property.
+// The type of address.
+const (
+	AddressDedicatedInstanceTypeDedicatedinstanceConst = "dedicatedInstance"
+)
+
+// NewAddressDedicatedInstance : Instantiate AddressDedicatedInstance (Generic Model Constructor)
+func (*ContextBasedRestrictionsV1) NewAddressDedicatedInstance(typeVar string, value string) (_model *AddressDedicatedInstance, err error) {
+	_model = &AddressDedicatedInstance{
+		Type:  core.StringPtr(typeVar),
+		Value: core.StringPtr(value),
+	}
+	err = core.ValidateStruct(_model, "required parameters")
+	return
+}
+
+func (*AddressDedicatedInstance) isaAddress() bool {
+	return true
+}
+
+// UnmarshalAddressDedicatedInstance unmarshals an instance of AddressDedicatedInstance from the specified map of raw messages.
+func UnmarshalAddressDedicatedInstance(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AddressDedicatedInstance)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3545,9 +3332,6 @@ func (*ContextBasedRestrictionsV1) NewAddressIPAddress(typeVar string, value str
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3560,17 +3344,14 @@ func UnmarshalAddressIPAddress(m map[string]json.RawMessage, result interface{})
 	obj := new(AddressIPAddress)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3603,9 +3384,6 @@ func (*ContextBasedRestrictionsV1) NewAddressIPAddressRange(typeVar string, valu
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3618,17 +3396,14 @@ func UnmarshalAddressIPAddressRange(m map[string]json.RawMessage, result interfa
 	obj := new(AddressIPAddressRange)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3661,9 +3436,6 @@ func (*ContextBasedRestrictionsV1) NewAddressServiceRef(typeVar string, ref *Ser
 		Ref:  ref,
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3676,17 +3448,14 @@ func UnmarshalAddressServiceRef(m map[string]json.RawMessage, result interface{}
 	obj := new(AddressServiceRef)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalModel(m, "ref", &obj.Ref, UnmarshalServiceRefValue)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "ref-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3719,9 +3488,6 @@ func (*ContextBasedRestrictionsV1) NewAddressSubnet(typeVar string, value string
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3734,17 +3500,14 @@ func UnmarshalAddressSubnet(m map[string]json.RawMessage, result interface{}) (e
 	obj := new(AddressSubnet)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
@@ -3777,9 +3540,6 @@ func (*ContextBasedRestrictionsV1) NewAddressVPC(typeVar string, value string) (
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(_model, "required parameters")
-	if err != nil {
-		err = core.SDKErrorf(err, "", "model-missing-required", common.GetComponentInfo())
-	}
 	return
 }
 
@@ -3792,17 +3552,14 @@ func UnmarshalAddressVPC(m map[string]json.RawMessage, result interface{}) (err 
 	obj := new(AddressVPC)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "type-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "value-error", common.GetComponentInfo())
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
 	if err != nil {
-		err = core.SDKErrorf(err, "", "id-error", common.GetComponentInfo())
 		return
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
