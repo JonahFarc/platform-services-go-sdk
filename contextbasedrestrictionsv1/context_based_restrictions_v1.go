@@ -1357,7 +1357,7 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 // - AddressSubnet
 // - AddressVPC
 // - AddressServiceRef
-// - AddressDedicatedInstance
+// - AddressInstance
 type Address struct {
 	// The type of address.
 	Type *string `json:"type,omitempty"`
@@ -1375,12 +1375,12 @@ type Address struct {
 // Constants associated with the Address.Type property.
 // The type of address.
 const (
-	AddressTypeDedicatedinstanceConst = "dedicatedInstance"
-	AddressTypeIpaddressConst         = "ipAddress"
-	AddressTypeIprangeConst           = "ipRange"
-	AddressTypeServicerefConst        = "serviceRef"
-	AddressTypeSubnetConst            = "subnet"
-	AddressTypeVPCConst               = "vpc"
+	AddressTypeInstanceConst   = "instance"
+	AddressTypeIpaddressConst  = "ipAddress"
+	AddressTypeIprangeConst    = "ipRange"
+	AddressTypeServicerefConst = "serviceRef"
+	AddressTypeSubnetConst     = "subnet"
+	AddressTypeVPCConst        = "vpc"
 )
 
 func (*Address) isaAddress() bool {
@@ -1414,8 +1414,8 @@ func UnmarshalAddress(m map[string]json.RawMessage, result interface{}) (err err
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressVPC)
 	} else if discValue == "serviceRef" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalAddressServiceRef)
-	} else if discValue == "dedicatedInstance" {
-		err = core.UnmarshalModel(m, "", result, UnmarshalAddressDedicatedInstance)
+	} else if discValue == "instance" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalAddressInstance)
 	} else {
 		err = fmt.Errorf("unrecognized value for discriminator property 'type': %s", discValue)
 	}
@@ -3254,58 +3254,6 @@ func UnmarshalZoneSummary(m map[string]json.RawMessage, result interface{}) (err
 	return
 }
 
-// AddressDedicatedInstance : A single Dedicated Instance address.
-// This model "extends" Address
-type AddressDedicatedInstance struct {
-	// The type of address.
-	Type *string `json:"type" validate:"required"`
-
-	// The dedicated instance CRN.
-	Value *string `json:"value" validate:"required"`
-
-	// The address id (for use by terraform only).
-	ID *string `json:"id,omitempty"`
-}
-
-// Constants associated with the AddressDedicatedInstance.Type property.
-// The type of address.
-const (
-	AddressDedicatedInstanceTypeDedicatedinstanceConst = "dedicatedInstance"
-)
-
-// NewAddressDedicatedInstance : Instantiate AddressDedicatedInstance (Generic Model Constructor)
-func (*ContextBasedRestrictionsV1) NewAddressDedicatedInstance(typeVar string, value string) (_model *AddressDedicatedInstance, err error) {
-	_model = &AddressDedicatedInstance{
-		Type:  core.StringPtr(typeVar),
-		Value: core.StringPtr(value),
-	}
-	err = core.ValidateStruct(_model, "required parameters")
-	return
-}
-
-func (*AddressDedicatedInstance) isaAddress() bool {
-	return true
-}
-
-// UnmarshalAddressDedicatedInstance unmarshals an instance of AddressDedicatedInstance from the specified map of raw messages.
-func UnmarshalAddressDedicatedInstance(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(AddressDedicatedInstance)
-	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
 // AddressIPAddress : A single IP address. IPv4 and IPv6 are supported.
 // This model "extends" Address
 type AddressIPAddress struct {
@@ -3394,6 +3342,58 @@ func (*AddressIPAddressRange) isaAddress() bool {
 // UnmarshalAddressIPAddressRange unmarshals an instance of AddressIPAddressRange from the specified map of raw messages.
 func UnmarshalAddressIPAddressRange(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AddressIPAddressRange)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// AddressInstance : A single Instance address.
+// This model "extends" Address
+type AddressInstance struct {
+	// The type of address.
+	Type *string `json:"type" validate:"required"`
+
+	// The instance CRN.
+	Value *string `json:"value" validate:"required"`
+
+	// The address id (for use by terraform only).
+	ID *string `json:"id,omitempty"`
+}
+
+// Constants associated with the AddressInstance.Type property.
+// The type of address.
+const (
+	AddressInstanceTypeInstanceConst = "instance"
+)
+
+// NewAddressInstance : Instantiate AddressInstance (Generic Model Constructor)
+func (*ContextBasedRestrictionsV1) NewAddressInstance(typeVar string, value string) (_model *AddressInstance, err error) {
+	_model = &AddressInstance{
+		Type:  core.StringPtr(typeVar),
+		Value: core.StringPtr(value),
+	}
+	err = core.ValidateStruct(_model, "required parameters")
+	return
+}
+
+func (*AddressInstance) isaAddress() bool {
+	return true
+}
+
+// UnmarshalAddressInstance unmarshals an instance of AddressInstance from the specified map of raw messages.
+func UnmarshalAddressInstance(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AddressInstance)
 	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
 		return

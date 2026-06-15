@@ -4304,13 +4304,6 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
-			It(`Invoke NewAddressDedicatedInstance successfully`, func() {
-				typeVar := "dedicatedInstance"
-				value := "testString"
-				_model, err := contextBasedRestrictionsService.NewAddressDedicatedInstance(typeVar, value)
-				Expect(_model).ToNot(BeNil())
-				Expect(err).To(BeNil())
-			})
 			It(`Invoke NewAddressIPAddress successfully`, func() {
 				typeVar := "ipAddress"
 				value := "testString"
@@ -4322,6 +4315,13 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 				typeVar := "ipRange"
 				value := "testString"
 				_model, err := contextBasedRestrictionsService.NewAddressIPAddressRange(typeVar, value)
+				Expect(_model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It(`Invoke NewAddressInstance successfully`, func() {
+				typeVar := "instance"
+				value := "testString"
+				_model, err := contextBasedRestrictionsService.NewAddressInstance(typeVar, value)
 				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
@@ -4522,26 +4522,6 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 			Expect(result).ToNot(BeNil())
 			Expect(result).To(Equal(model))
 		})
-		It(`Invoke UnmarshalAddressDedicatedInstance successfully`, func() {
-			// Construct an instance of the model.
-			model := new(contextbasedrestrictionsv1.AddressDedicatedInstance)
-			model.Type = core.StringPtr("dedicatedInstance")
-			model.Value = core.StringPtr("testString")
-			model.ID = core.StringPtr("testString")
-
-			b, err := json.Marshal(model)
-			Expect(err).To(BeNil())
-
-			var raw map[string]json.RawMessage
-			err = json.Unmarshal(b, &raw)
-			Expect(err).To(BeNil())
-
-			var result *contextbasedrestrictionsv1.AddressDedicatedInstance
-			err = contextbasedrestrictionsv1.UnmarshalAddressDedicatedInstance(raw, &result)
-			Expect(err).To(BeNil())
-			Expect(result).ToNot(BeNil())
-			Expect(result).To(Equal(model))
-		})
 		It(`Invoke UnmarshalAddressIPAddress successfully`, func() {
 			// Construct an instance of the model.
 			model := new(contextbasedrestrictionsv1.AddressIPAddress)
@@ -4578,6 +4558,26 @@ var _ = Describe(`ContextBasedRestrictionsV1`, func() {
 
 			var result *contextbasedrestrictionsv1.AddressIPAddressRange
 			err = contextbasedrestrictionsv1.UnmarshalAddressIPAddressRange(raw, &result)
+			Expect(err).To(BeNil())
+			Expect(result).ToNot(BeNil())
+			Expect(result).To(Equal(model))
+		})
+		It(`Invoke UnmarshalAddressInstance successfully`, func() {
+			// Construct an instance of the model.
+			model := new(contextbasedrestrictionsv1.AddressInstance)
+			model.Type = core.StringPtr("instance")
+			model.Value = core.StringPtr("testString")
+			model.ID = core.StringPtr("testString")
+
+			b, err := json.Marshal(model)
+			Expect(err).To(BeNil())
+
+			var raw map[string]json.RawMessage
+			err = json.Unmarshal(b, &raw)
+			Expect(err).To(BeNil())
+
+			var result *contextbasedrestrictionsv1.AddressInstance
+			err = contextbasedrestrictionsv1.UnmarshalAddressInstance(raw, &result)
 			Expect(err).To(BeNil())
 			Expect(result).ToNot(BeNil())
 			Expect(result).To(Equal(model))
